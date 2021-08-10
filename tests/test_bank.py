@@ -2,7 +2,7 @@
 
 import pytest
 
-from bank_api.bank import Bank, Account
+from bank_api.bank import Bank, Account, Transaction
 
 
 @pytest.fixture
@@ -45,4 +45,25 @@ def test_cannot_modify_accounts_set(bank: Bank):
 
 
 # TODO: Add unit tests for bank.add_funds()
+def test_add_funds(bank: Bank):
+    bank.create_account('Test')
+    account = bank.get_account('Test')
+    bank.add_funds('Test', 25)
+    transactions = bank.transactions
 
+    assert transactions[0].account == account
+    assert transactions[0].amount == 25
+    assert len(transactions) == 1
+
+def test_add_negative_funds(bank: Bank):
+    bank.create_account('Test')
+    account = bank.get_account('Test')
+    with pytest.raises(Exception):
+        bank.add_funds('Test', -30)
+
+def test_add_float_funds(bank: Bank):
+    bank.create_account('Test')
+    bank.add_funds('Test', 15.85)
+    transaction = bank.transactions
+
+    assert bank.transactions[0].amount == 15.85

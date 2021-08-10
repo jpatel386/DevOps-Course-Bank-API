@@ -45,6 +45,9 @@ class Bank:
 
     def add_funds(self, name: str, amount: int) -> None:
         """Add funds to the named account"""
+        if amount <= 0:
+            raise ValueError("You tried to add a stupid amount. Please try to add an amount greater than 0.")
         account = self.get_account(name)
         now = datetime.now()
         self._transactions.add(Transaction(account, now, amount))
+            
